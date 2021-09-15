@@ -1,9 +1,15 @@
-const instagram = require('./service');
+const whats = require('./service');
 
 
 (async ()=>{
 
-    await instagram.initialize();
+    const loop = true;
+
+    await whats.initialize();
+
+    while (loop){
+      await whats.mensage();
+    }
 
     debugger;
 
