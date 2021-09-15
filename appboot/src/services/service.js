@@ -48,13 +48,13 @@ const whats = {
                     
                     await whats.page.waitFor(1000); 
 
-                    newMensage.click()
+                    newMensage.click();
 
-                    await whats.page.waitFor(3000)
+                    await whats.page.waitFor(3000);
     
                     await whats.page.type('[class="_2vbn4"]',mensage);
 
-                    await whats.page.waitFor(5000)
+                    await whats.page.waitFor(5000);
     
                     //await whats.page.click('[data-icon="send"]');
 
