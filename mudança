@@ -1,0 +1,22 @@
+        while(true){
+            const bodyHandle = await instagram.page.$('body');
+            const { height } = await bodyHandle.boundingBox();
+            await bodyHandle.dispose();
+            
+            // Scroll one viewport at a time, pausing to let content load
+            const viewportHeight = instagram.page.viewport().height;
+            let viewportIncr = 0;
+            while (viewportIncr + viewportHeight < height) {
+            await instagram.page.evaluate(_viewportHeight => {
+            window.scrollBy(0, _viewportHeight);
+            }, viewportHeight);
+            await instagram.page.waitForTimeout(500);
+            viewportIncr = viewportIncr + viewportHeight;
+            }
+
+            // Scroll back to top
+            await instagram.page.evaluate(_ => {
+            window.scrollTo(0, 0);
+            });
+        }
+    }
