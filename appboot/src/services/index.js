@@ -7,7 +7,11 @@ const whats = require('./service');
     await whats.initialize();
 
     while (true){
-      await whats.mensage();
+
+      
+      //await whats.mensage();
+
+      await whats.toFile();
     }
 
 
