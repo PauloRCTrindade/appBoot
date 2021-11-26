@@ -45,13 +45,11 @@ const whats = {
 
     },
 
-
-
     mensage: async () =>{
 
             async function loadNewMensage(page, selector){
 
-                const newMensage = await page.$(selector);
+                let newMensage = await page.$(selector);
 								
 								await whats.page.waitFor(4000)
 
@@ -65,13 +63,15 @@ const whats = {
 
 										const inputMensagemAutomatica = await whats.page.$('[class="input-message inputChat"]');
 
-										await whats.page.waitFor(5000)
-
 										await inputMensagemAutomatica.type(mensageBoasVindas);
+
+										await whats.page.waitFor(3000)
 										
 										const sendMensagem = await whats.page.$('[class="send-button"]')
 
-										 await sendMensagem.click();
+										await sendMensagem.click();
+
+										newMensage = '';
                     
                 }else {
 									console.log('Nenhuma mensagemm em atendimento ')    
