@@ -14,7 +14,10 @@ const whats = {
 	browser: null,
 	page: null,
 
+
 	initialize: async () => {
+
+		console.log('INICIOU!!')
 
 		whats.browser = await puppeteer.launch({
 			headless: true,
