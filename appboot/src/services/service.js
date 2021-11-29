@@ -17,7 +17,7 @@ const whats = {
 	initialize: async () => {
 
 		whats.browser = await puppeteer.launch({
-			headless: false,
+			headless: true,
 			slowMo: 5,
 		});
 
@@ -25,7 +25,7 @@ const whats = {
 
 		await whats.page.goto(BASE_URL);
 
-		await whats.page.waitFor(5000);
+		await whats.page.waitForTimeout(5000);
 
 		const inputLogin = await whats.page.$('[class="chat-usuario"]');
 
@@ -37,7 +37,7 @@ const whats = {
 
 		const buttonEntrar = await whats.page.$('[class="_3hV1n yavlE"]');
 
-		await whats.page.waitFor(1000);
+		await whats.page.waitForTimeout(1000);
 
 		await buttonEntrar.click();
 
@@ -47,13 +47,9 @@ const whats = {
 
 		async function loadNewMensage(page, selector) {
 
-			console.log('Inicio da Função')
+			let newMensage = await page.$(selector); // Seleciona o Ícone que aparece quando a mensagem ainda não foi aberta por nenhum operador 
 
-			let newMensage = await page.$(selector);
-
-			await whats.page.waitFor(4000)
-
-			console.log(newMensage, 'inicio ');
+			await page.waitForTimeout(4000)
 
 			if (newMensage ) {
 
@@ -61,66 +57,64 @@ const whats = {
 
 				await newMensage.click();
 
-				await whats.page.waitFor(3000)
+				await page.waitForTimeout(3000)
 
-				const inputMensagemAutomatica = await whats.page.$('[class="input-message inputChat"]');
+				const inputMensagemAutomatica = await page.$('[class="input-message inputChat"]');
 
 				await inputMensagemAutomatica.type(mensagemBoasVindas);
 
-				await whats.page.waitFor(3000)
+				await page.waitForTimeout(3000)
 
-				const sendMensagem = await whats.page.$('[class="send-button"]')
+				const sendMensagem = await page.$('[class="send-button"]')
 
 				await sendMensagem.click();
 
 				newMensage = null;
 
-				console.log(newMensage,'FINAL ms automat')
+				await page.waitForTimeout(4000)
 
 			} else {
 				console.log('Nenhuma mensagemm em atendimento ');
 			}
 		}
 
-		console.log('Final da Função')
 		await loadNewMensage(whats.page, '[class="fa fa-mobile-alt"');
 
 	},
-
 
 	toFile: async () => {
 
 		const toFile = await whats.page.$('[class="_3m_Xw"]');
 
 		if (toFile) {
-			await whats.page.waitFor(1000)
+			await whats.page.waitForTimeout(1000)
 
 			await toFile.click();
 
-			await whats.page.waitFor(1000);
+			await whats.page.waitForTimeout(1000);
 
 			await whats.page.type('[class="_2vbn4"]', mensagemForaExpediente);
 
-			await whats.page.waitFor(2000);
+			await whats.page.waitForTimeout(2000);
 
 			await whats.page.click('[data-icon="send"]');
 
-			await whats.page.waitFor(1000);
+			await whats.page.waitForTimeout(1000);
 
 			await toFile.click({ button: 'right' });
 
-			await whats.page.waitFor(1000);
+			await whats.page.waitForTimeout(1000);
 
 			const toFileClick = await whats.page.$('[class="_2oldI dJxPU"]');
 
 			if (toFileClick) {
 
-				await whats.page.waitFor(1000);
+				await whats.page.waitForTimeout(1000);
 
 				toFileClick.click();
 			}
 
-			await whats.page.waitFor(1000)
+			await whats.page.waitForTimeout(1000)
 
 		}
 
