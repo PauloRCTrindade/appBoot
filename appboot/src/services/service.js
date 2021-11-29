@@ -2,129 +2,132 @@ const puppeteer = require('puppeteer');
 
 const BASE_URL = 'https://chat.utalk.chat/login/sb8cdn3';
 
-const mensage = 'Olá !, O Nosso Horário de atendimento via whatsApp é somente de *Segunda a Sexta  das 08:00h as 18:00h*. Obrigado! '
+const mensagemForaExpediente = 'Olá !, O Nosso Horário de atendimento via whatsApp é somente em *Dias úteis das 08:00h as 18:00h*. Obrigado! '
 
-const mensageBoasVindas = 'Olá seja bem vindo ao atendimento da América Soft, aguarde um instante que um dos nossos colaboradores realizará o seu atendimentto '
+const mensagemBoasVindas = 'Olá ! Seja bem vindo ao atendimento da América Soft, aguarde um instante que um dos nossos colaboradores realizará o seu atendimento. '
 
 const login = 'autoatendimento';
 
 const senha = '12345';
 
-
-
 const whats = {
-    browser:null,
-    page:null,
+	browser: null,
+	page: null,
 
-    initialize: async () =>{
-        whats.browser = await puppeteer.launch({
-            headless: false,
-            slowMo: 10,
-        });
+	initialize: async () => {
 
-        whats.page = await whats.browser.newPage();
+		whats.browser = await puppeteer.launch({
+			headless: false,
+			slowMo: 5,
+		});
 
-        await whats.page.goto(BASE_URL);
+		whats.page = await whats.browser.newPage();
 
-        await whats.page.waitFor(5000);
+		await whats.page.goto(BASE_URL);
 
-        const inputLogin = await whats.page.$('[class="chat-usuario"]');
+		await whats.page.waitFor(5000);
 
-        await inputLogin.type(login);
+		const inputLogin = await whats.page.$('[class="chat-usuario"]');
 
-        const inputPassword = await whats.page.$('[class="chat-senha"]');
+		await inputLogin.type(login);
 
-        await inputPassword.type(senha);
+		const inputPassword = await whats.page.$('[class="chat-senha"]');
 
-        const buttonEntrar = await whats.page.$('[class="_3hV1n yavlE"]');
+		await inputPassword.type(senha);
 
-        await whats.page.waitFor(1000);
+		const buttonEntrar = await whats.page.$('[class="_3hV1n yavlE"]');
+
+		await whats.page.waitFor(1000);
+
+		await buttonEntrar.click();
+
+	},
+
+	mensage: async () => {
+
+		async function loadNewMensage(page, selector) {
+
+			console.log('Inicio da Função')
+
+			let newMensage = await page.$(selector);
+
+			await whats.page.waitFor(4000)
+
+			console.log(newMensage, 'inicio ');
+
+			if (newMensage ) {
+
+				console.log('Mensagem em atendimento');
+
+				await newMensage.click();
+
+				await whats.page.waitFor(3000)
+
+				const inputMensagemAutomatica = await whats.page.$('[class="input-message inputChat"]');
+
+				await inputMensagemAutomatica.type(mensagemBoasVindas);
+
+				await whats.page.waitFor(3000)
+
+				const sendMensagem = await whats.page.$('[class="send-button"]')
+
+				await sendMensagem.click();
+
+				newMensage = null;
+
+				console.log(newMensage,'FINAL ms automat')
+
+			} else {
+				console.log('Nenhuma mensagemm em atendimento ');
+			}
+		}
+
+		console.log('Final da Função')
+		await loadNewMensage(whats.page, '[class="fa fa-mobile-alt"');
+
+	},
 
 
-        await buttonEntrar.click();
+	toFile: async () => {
 
-    },
+		const toFile = await whats.page.$('[class="_3m_Xw"]');
 
-    mensage: async () =>{
+		if (toFile) {
+			await whats.page.waitFor(1000)
 
-            async function loadNewMensage(page, selector){
+			await toFile.click();
 
-                let newMensage = await page.$(selector);
-								
-								await whats.page.waitFor(4000)
+			await whats.page.waitFor(1000);
 
-                 if (newMensage){
+			await whats.page.type('[class="_2vbn4"]', mensagemForaExpediente);
 
-                    console.log('Mensagem em atendimento');
+			await whats.page.waitFor(2000);
 
-										await newMensage.click();
+			await whats.page.click('[data-icon="send"]');
 
-										await whats.page.waitFor(3000)
+			await whats.page.waitFor(1000);
 
-										const inputMensagemAutomatica = await whats.page.$('[class="input-message inputChat"]');
+			await toFile.click({ button: 'right' });
 
-										await inputMensagemAutomatica.type(mensageBoasVindas);
+			await whats.page.waitFor(1000);
 
-										await whats.page.waitFor(3000)
-										
-										const sendMensagem = await whats.page.$('[class="send-button"]')
+			const toFileClick = await whats.page.$('[class="_2oldI dJxPU"]');
 
-										await sendMensagem.click();
+			if (toFileClick) {
 
-										newMensage = '';
-                    
-                }else {
-									console.log('Nenhuma mensagemm em atendimento ')    
-								}
-            }
+				await whats.page.waitFor(1000);
 
-            await loadNewMensage(whats.page, '[class="fa fa-mobile-alt"');
-            
-    },
+				toFileClick.click();
+			}
 
-    
-    toFile: async () =>{
+			await whats.page.waitFor(1000)
 
-            const toFile = await whats.page.$('[class="_3m_Xw"]');
-          
-            if(toFile){
-                await whats.page.waitFor(1000)
-                        
-                await toFile.click();
+		}
 
-                await whats.page.waitFor(1000);
-
-                await whats.page.type('[class="_2vbn4"]',mensageBoasVindas);
-
-                await whats.page.waitFor(2000);
-
-                await whats.page.click('[data-icon="send"]');
-
-                await whats.page.waitFor(1000);
-
-                await toFile.click({ button:'right' });
-
-                await whats.page.waitFor(1000);
-
-                const toFileClick = await whats.page.$('[class="_2oldI dJxPU"]');
-
-                if (toFileClick){
-
-                    await whats.page.waitFor(1000);
-
-                    toFileClick.click();
-                }
-
-                await whats.page.waitFor(1000)
-                
-
-        }
-                
-    }
+	}
 
 }
 
- module.exports = whats;
+module.exports = whats;
 
 
- 
