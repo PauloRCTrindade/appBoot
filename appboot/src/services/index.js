@@ -1,7 +1,7 @@
 const whats = require('./service');
 
 const diaSemana = new Date().getDay();
-const hora = 18//new Date().getHours();
+const hora = new Date().getHours();
 const feriado = false;
 
 (async () => {
