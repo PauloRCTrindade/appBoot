@@ -20,7 +20,7 @@ const whats = {
 		console.log('INICIOU!!')
 
 		whats.browser = await puppeteer.launch({
-			headless: true,
+			headless: false,
 			slowMo: 5,
 		});
 
@@ -44,17 +44,21 @@ const whats = {
 
 		await buttonEntrar.click();
 
+		await whats.page.waitForTimeout(10000)
+
 	},
 
 	mensage: async () => {
 
 		async function loadNewMensage(page, selector) {
 
+			await page.waitForTimeout(4000)
+
 			let newMensage = await page.$(selector); // Seleciona o Ícone que aparece quando a mensagem ainda não foi aberta por nenhum operador 
 
 			await page.waitForTimeout(4000)
 
-			if (newMensage ) {
+			if (newMensage) {
 
 				console.log('Mensagem em atendimento');
 
@@ -87,39 +91,62 @@ const whats = {
 
 	toFile: async () => {
 
-		const toFile = await whats.page.$('[class="_3m_Xw"]');
+		async function toFileNewMensage(page, selector) {
+			console.log('Arquiva conversa')
 
-		if (toFile) {
-			await whats.page.waitForTimeout(1000)
+			await page.waitForTimeout(4000)
 
-			await toFile.click();
+			const toFile = await whats.page.$(selector);
 
-			await whats.page.waitForTimeout(1000);
+			await page.waitForTimeout(4000)
 
-			await whats.page.type('[class="_2vbn4"]', mensagemForaExpediente);
+			if (toFile) {
+				console.log('Arquivando Converrsa')
 
-			await whats.page.waitForTimeout(2000);
-
-			await whats.page.click('[data-icon="send"]');
-
-			await whats.page.waitForTimeout(1000);
-
-			await toFile.click({ button: 'right' });
-
-			await whats.page.waitForTimeout(1000);
-
-			const toFileClick = await whats.page.$('[class="_2oldI dJxPU"]');
-
-			if (toFileClick) {
+				await toFile.click();
 
 				await whats.page.waitForTimeout(1000);
 
-				toFileClick.click();
+				const inputMensagemAutomaticaForaExpediente = await page.$('[class="input-message inputChat"]');
+
+				await inputMensagemAutomaticaForaExpediente.type(mensagemForaExpediente)
+
+				await whats.page.waitForTimeout(3000);
+
+				const sendMensagemForaExpediente = await page.$('[class="send-button"]');
+
+				await sendMensagemForaExpediente.click();
+
+				await whats.page.waitForTimeout(1000);
+
+				const arquivaMensagem = await page.$('[class="btNovaConversa click-finalizaratendimento"]')
+
+				await page.waitForTimeout(1000);
+
+				await arquivaMensagem.click();
+
+				await page.waitForTimeout(1000);
+
+				let checkArquivar = false;
+
+				if (checkArquivar === false){
+					const check = await page.$('[id="ffa_checkArquivar"]');
+					check.click();
+					checkArquivar = true;
+				}
+
+				await page.waitForTimeout(1000);				
+
+				const buttonArquivar = await page.$('[class="uk-button uk-button-success"]')
+				buttonArquivar.click();
+
+			} else {
+				console.log('Todas mensagens arquivadas')
 			}
 
-			await whats.page.waitForTimeout(1000)
-
 		}
+		await toFileNewMensage(whats.page, '[class="fa fa-mobile-alt"');
+
 
 	}
 
