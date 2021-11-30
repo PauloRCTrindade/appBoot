@@ -2,13 +2,13 @@ const puppeteer = require('puppeteer');
 
 const BASE_URL = 'https://chat.utalk.chat/login/sb8cdn3';
 
-const mensagemForaExpediente = 'Olá !, O Nosso Horário de atendimento via whatsApp é somente em *Dias úteis das 08:00h as 18:00h*. Obrigado! '
-
 const mensagemBoasVindas = 'Olá ! Seja bem vindo ao atendimento da América Soft, aguarde um instante que um dos nossos colaboradores realizará o seu atendimento. '
 
 const login = 'autoatendimento';
 
 const senha = '12345';
+
+var checkArquivar = false;
 
 const whats = {
 	browser: null,
@@ -20,7 +20,7 @@ const whats = {
 		console.log('INICIOU!!')
 
 		whats.browser = await puppeteer.launch({
-			headless: false,
+			headless: true,
 			slowMo: 5,
 		});
 
@@ -62,7 +62,13 @@ const whats = {
 
 				console.log('Mensagem em atendimento');
 
+				await page.waitForTimeout(2000)
+
+				
+
 				await newMensage.click();
+
+				await page.waitForTimeout(2000)
 
 				await page.waitForTimeout(3000)
 
@@ -75,6 +81,8 @@ const whats = {
 				const sendMensagem = await page.$('[class="send-button"]')
 
 				await sendMensagem.click();
+
+				await page.waitForTimeout(2000)
 
 				newMensage = null;
 
@@ -96,49 +104,37 @@ const whats = {
 
 			await page.waitForTimeout(4000)
 
-			const toFile = await whats.page.$(selector);
+			let toFile = await whats.page.$(selector);
 
 			await page.waitForTimeout(4000)
 
 			if (toFile) {
-				console.log('Arquivando Converrsa')
+				console.log('Arquivando Conversa')
 
 				await toFile.click();
 
-				await whats.page.waitForTimeout(1000);
+				await whats.page.waitForTimeout(2000);
 
-				const inputMensagemAutomaticaForaExpediente = await page.$('[class="input-message inputChat"]');
+				const arquivaMensagem = await page.$('[class="btNovaConversa click-finalizaratendimento"]');
 
-				await inputMensagemAutomaticaForaExpediente.type(mensagemForaExpediente)
-
-				await whats.page.waitForTimeout(3000);
-
-				const sendMensagemForaExpediente = await page.$('[class="send-button"]');
-
-				await sendMensagemForaExpediente.click();
-
-				await whats.page.waitForTimeout(1000);
-
-				const arquivaMensagem = await page.$('[class="btNovaConversa click-finalizaratendimento"]')
-
-				await page.waitForTimeout(1000);
+				await page.waitForTimeout(2000);
 
 				await arquivaMensagem.click();
 
-				await page.waitForTimeout(1000);
-
-				let checkArquivar = false;
+				await page.waitForTimeout(2000);
 
 				if (checkArquivar === false){
 					const check = await page.$('[id="ffa_checkArquivar"]');
 					check.click();
 					checkArquivar = true;
-				}
+				}			
 
-				await page.waitForTimeout(1000);				
+				await page.waitForTimeout(1000);
+				page.mouse.click (500, 400, {button: 'left'})
 
-				const buttonArquivar = await page.$('[class="uk-button uk-button-success"]')
-				buttonArquivar.click();
+				toFile = null;
+
+				await page.waitForTimeout(4000)
 
 			} else {
 				console.log('Todas mensagens arquivadas')
@@ -146,7 +142,6 @@ const whats = {
 
 		}
 		await toFileNewMensage(whats.page, '[class="fa fa-mobile-alt"');
-
 
 	}
 
