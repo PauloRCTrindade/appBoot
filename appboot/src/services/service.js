@@ -21,7 +21,7 @@ const whats = {
 
 		whats.browser = await puppeteer.launch({
 			headless: true,
-			slowMo: 5,
+			slowMo: 4,
 		});
 
 		whats.page = await whats.browser.newPage();
