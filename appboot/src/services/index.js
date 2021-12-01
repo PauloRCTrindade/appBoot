@@ -1,14 +1,16 @@
 const whats = require('./service');
-
-const diaSemana = new Date().getDay();
-const hora = new Date().getHours();
 const feriado = false;
 
 (async () => {
 
+
+
 	await whats.initialize();
 
 	while (true) {
+		const hora = new Date().getHours();
+		const diaSemana = new Date().getDay();
+		console.log(hora);
 		if (diaSemana !== 0 && diaSemana !== 6 && feriado === false) { // Dias úteis
 			if (hora >= 8 && hora <= 17) { // Dia útil dentro do horário
 				console.log('chamda da função')

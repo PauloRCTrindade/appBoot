@@ -64,15 +64,11 @@ const whats = {
 
 				await page.waitForTimeout(2000)
 
-				
-
-				await newMensage.click();
-
-				await page.waitForTimeout(2000)
+				await newMensage.click(); // Abre a conversa
 
 				await page.waitForTimeout(3000)
 
-				const inputMensagemAutomatica = await page.$('[class="input-message inputChat"]');
+				const inputMensagemAutomatica = await page.$('[class="input-message inputChat"]'); // Seleciona o IImput de texto
 
 				await inputMensagemAutomatica.type(mensagemBoasVindas);
 
@@ -80,7 +76,7 @@ const whats = {
 
 				const sendMensagem = await page.$('[class="send-button"]')
 
-				await sendMensagem.click();
+				await sendMensagem.click(); // clica no enter
 
 				await page.waitForTimeout(2000)
 
