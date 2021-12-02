@@ -10,15 +10,13 @@ const feriado = false;
 	while (true) {
 		const hora = new Date().getHours();
 		const diaSemana = new Date().getDay();
-		console.log(hora);
 		if (diaSemana !== 0 && diaSemana !== 6 && feriado === false) { // Dias úteis
 			if (hora >= 8 && hora <= 17) { // Dia útil dentro do horário
-				console.log('chamda da função')
-				console.log(hora)
+				console.log('Dentro do Horário',hora)
 				await whats.mensage();
 			} else { // Dia útil fora do horário
 				await whats.toFile();
-			console.log('fora do horário')
+			console.log('fora do horário',hora)
 			}
 		} else {
 			await whats.toFile(); // Final de semana ou Feriado 

@@ -56,11 +56,11 @@ const whats = {
 
 			let newMensage = await page.$(selector); // Seleciona o Ícone que aparece quando a mensagem ainda não foi aberta por nenhum operador 
 
-			await page.waitForTimeout(4000)
+			//await page.waitForTimeout(4000)
 
 			if (newMensage) {
 
-				console.log('Mensagem em atendimento');
+				console.log('*-------------------------------------- Mensagem em atendimento -------------------------------------------------*');
 
 				await page.waitForTimeout(2000)
 
